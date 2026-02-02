@@ -1,11 +1,5 @@
 <div data-editable="array" data-prop="content_blocks" data-id-key="_bookshop_name" data-component-key="_bookshop_name">
 
-{{ if .topper }}
-  <editable-array-item data-component="{{ ._bookshop_name }}" data-id="{{ ._bookshop_name }}">
-  {{ partial "bookshop" (slice .topper._bookshop_name (dict "topper" .topper "title" .title "params" .params)) }}
-  </editable-array-item>
-{{ end }}
-
 {{ range .blocks }}
   <editable-array-item data-component="{{ ._bookshop_name }}" data-id="{{ ._bookshop_name }}">
 
