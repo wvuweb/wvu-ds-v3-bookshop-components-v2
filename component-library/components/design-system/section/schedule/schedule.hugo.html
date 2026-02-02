@@ -1,0 +1,33 @@
+{{ $heading := .heading }}
+
+<div class="row gx-4">
+  <div class="col-lg-18 col-xl-16 mx-lg-auto">
+    {{ range .items }}
+      <div class="row mb-5 gx-lg-4">
+        <div class="col-lg-6">
+          <div class="h1 mb-0 text-decoration-none text-center text-lg-end mb-2">
+            <span class="fa-regular fa-{{ .icon }} wvu-b-accent-text" aria-hidden="true"></span>
+          </div>
+        </div>
+        <div class="col-lg-18 text-center text-lg-start">
+          {{ if not $heading }}
+            <h2 id="{{ .settings.config.name }}-label" class="wvu-b-display-heading h1"><span class="wvu-b-font-adjust">{{ .title }}</span></h2>
+          {{ else }}
+            <h3 id="{{ .settings.config.name }}-label" class="wvu-b-display-heading h1"><span class="wvu-b-font-adjust">{{ .title }}</span></h3>
+          {{ end }}
+          {{ if or .start_time .end_time }}
+            <p class="lead">{{ if .start_time }}{{ .start_time }}{{ end }}{{ if .end_time }} - {{ .end_time }}{{ end }}</p>
+          {{ end }}
+          <p>{{ .text | markdownify }}</p>
+          {{ if .ctas }}
+            <div>
+              {{ range .ctas }}
+                <a class="btn wvu-b-btn mb-1" href="{{ .url }}">{{ .text }}{{ if .icon }} <span class="fa-regular fa-{{ .icon }}"></span>{{ end }}</a>
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+  </div>
+</div>

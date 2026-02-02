@@ -1,0 +1,34 @@
+{{ $heading := .heading }}
+{{ $cardColor := .settings.styles.card_c }}
+{{ $colSpan := 8 }}
+{{ $itemCount := "" }}
+{{ $items := .items }}
+
+{{- if not site.Params.env_bookshop_live -}}
+  {{ $itemCount = $items | len }}
+  {{ if eq $itemCount 2 }}
+    {{ $colSpan = "12" }}
+  {{ else if eq $itemCount 1 }}
+    {{ $colSpan = "18 mx-xl-auto" }}
+  {{ end }}
+{{- end -}}
+
+<div class="row gx-4 text-center mb-n5">
+  {{ range .items }}
+    <div class="col-24 col-lg-12 col-xl-{{ $colSpan }} mb-5">
+      <div class="position-relative px-5 py-6 h-100 bg-{{ $cardColor }} wvu-b-subtle wvu-b-border wvu-b-shadow">
+        {{ if not $heading }}
+          <h2 class="h1 wvu-b-display-heading wvu-b-accent-text"><span class="wvu-b-font-adjust">{{ .title }}</span></h2>
+        {{ else }}
+          <h3 class="h1 wvu-b-display-heading wvu-b-accent-text"><span class="wvu-b-font-adjust">{{ .title }}</span></h3>
+        {{ end }}
+        {{ if .text }}
+          <div class="mb-3">
+            {{ .text | markdownify }}
+          </div>
+        {{ end }}
+        <a class="stretched-link" href="{{ .url }}"><span class="fa-thin fa-arrow-circle-right display-4 wvu-b-accent-text"></span><span class="visually-hidden">{{ .title }}</span></a>
+      </div>
+    </div>
+  {{ end }}
+</div>

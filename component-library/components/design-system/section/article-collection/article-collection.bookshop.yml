@@ -1,0 +1,235 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - content_blocks
+  label: "Article Collection"
+  description: Grid of tagged articles.
+  icon: library_books
+  tags: [Lists]
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  heading: Article Collection Heading
+  subheading: Subheading goes here.
+  aria_label:
+  tags: []
+  # postscript:
+  #   copy:
+    # ctas:
+  settings:
+    styles:
+      audience: general
+      tone: default
+      color_palette: option-1
+      bg_subtle:
+      # enable_blend: false
+      # tint_opacity: '0.7'
+      # remove_container_background: false
+    layout:
+      buffer:
+      margin:
+      padding: py-6 py-xxl-7
+      max_cols:
+    config:
+      name: article-collection
+      edit_mode_only: false
+      include_heading_postscript: true
+      limit: 4
+      show_content: false
+      hide_thumbnails: false
+      # show: 2024-09-01
+      # hide: 2099-09-01
+  is_dynamic: true
+  is_nested: false
+  use_common_wrapper: true
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  aria_label:
+    label: ARIA Label
+    hidden: 'heading'
+    options:
+      required: true
+    context:
+      content: If your component doesn’t have a heading, it needs an <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-label">ARIA label</a> to be accessible. Enter a concise label to provide a clear and useful name for this component e.g. “Featured News Stories.”
+  audience:
+    type: choice
+    options:
+      allow_empty: false
+      values:
+        - name: General
+          class: general
+        - name: Academic / Traditional
+          class: alumni
+        - name: Modern + Formal
+          class: leaders_partners
+        - name: Prospective Students
+          class: prospective_students
+      value_key: class
+    label: Style
+    context:
+      content: This defines the typography palette of the component.
+  bg_subtle:
+    type: checkbox
+    label: Tint/Shade Background
+    context:
+      content: If an adjacent component has the same background color as this component, you can select this option to either tint or shade the background color and add separation. Does not work with Let's Go! tone.
+  buffer:
+    type: select
+    options:
+      allow_empty: true
+      values: _select_data.buffers
+      value_key: class
+    context:
+      content: If you want the component above this one to overlap on the top, choose "Buffer Top." If you want the component below to overlap, choose "Buffer Bottom." If you want both to overlap, choose "Buffer Both." For either the component above or below that you want to overlap, you must adjust the Margin in that component's Settings > Config.
+    cascade: true
+  color_palette:
+    type: choice
+    options:
+      allow_empty: false
+      values: _select_data.color_palettes
+      value_key: class
+    context:
+      content: The options available change depending on the selected Style and Tone.
+  hide:
+    type: datetime
+    hidden: true
+    options:
+      timezone: America/New_York
+  include_heading_postscript:
+    hidden: true
+  is_dynamic:
+    hidden: true
+  is_nested:
+    hidden: true
+  limit:
+    type: number
+  margin:
+    type: select
+    options:
+      allow_empty: true
+      values: _select_data.container_margins
+      value_key: class
+    context:
+      content: If you want this component to overlap the component above, choose "Pull Up." If you want this component to overlap the component below, choose "Pull Down." If you want this component to overlap both, choose "Pull Both." Note, you should add a Buffer to the component above or below (or both), to allow for enough space for this component to overlap.
+  max_cols:
+    hidden: true
+  padding:
+    type: auto
+    hidden: true
+  postscript:
+    options:
+      preview:
+        text: Text and CTAs
+        subtext: These will display after your content.
+        icon: more_horiz
+  remove_container_background:
+    hidden: true
+  settings:
+    type: object
+    options:
+      subtype: tabbed
+      preview:
+        text: Styles, Layout and Config
+        subtext: Update colors and fonts, shift the component up or down, etc.
+        icon: settings
+  show_content:
+    hidden: true
+  show:
+    type: datetime
+    hidden: true
+  # tint_opacity:
+  #   type: select
+  #   options:
+  #     allow_empty: true
+  #     values: _select_data.tint_opacities
+  #     value_key: value
+  #   comment: >-
+  #     Use to improve text legibility when using a background image. Disabled
+  #     when blend is enabled.
+  tags:
+    tags:
+    type: multiselect
+    options:
+      allow_create: true
+      allow_empty: true
+      preview:
+        icon: shoppingmode
+    context:
+      content: Articles with these tags will pull into your collection.
+  tone:
+    type: choice
+    options:
+      allow_empty: false
+      values:
+        - name: Default
+          class: default
+        - name: Reserved
+          class: reserved
+        - name: Loud
+          class: loud
+        - name: Let’s Go!
+          class: lets-go
+      value_key: class
+    context:
+      content: This will refine the typography palette based on the Style selected.
+  ctas:
+    type: array
+    options:
+      structures: _structures.links
+    cascade: true
+  copy:
+    type: markdown
+    options:
+      allowed_sources:
+        - ccdam
+  use_common_wrapper:
+    type: auto
+    hidden: true
+_select_data:
+  buffers:
+    - name: Buffer Top
+      class: pt-6
+    - name: Buffer Bottom
+      class: pb-6
+    - name: Buffer Both
+      class: py-6
+  color_palettes:
+    - name: Option 1
+      class: option-1
+    - name: Option 2
+      class: option-2
+    - name: Option 3
+      class: option-3
+    - name: Option 4
+      class: option-4
+    - name: Option 5
+      class: option-5
+    - name: Option 6
+      class: option-6
+    - name: Option 7
+      class: option-7
+    - name: Option 8
+      class: option-8
+  container_margins:
+    - name: Pull Up
+      class: mt-n8 mt-xxl-n9
+  tint_opacities:
+    - name: None
+      value: '0.0'
+    - name: Light
+      value: '0.3'
+    - name: Medium
+      value: '0.5'
+    - name: Dark
+      value: '0.7'
+_structures:
+  links:
+    values:
+      - value:
+          text:
+          icon:
+          url:

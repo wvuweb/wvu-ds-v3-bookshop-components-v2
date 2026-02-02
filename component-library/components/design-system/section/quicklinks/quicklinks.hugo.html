@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-xxl-8 position-relative mb-5 mb-xxl-0">
+    <h2 id="{{ .settings.config.name }}-label" class="wvu-b-display-heading">
+      {{ .heading }}
+    </h2>
+    {{ if .subheading }}
+      <p class="wvu-b-subheading mt-3 h4">{{ .subheading }}</p>
+    {{ end }}
+    {{ if .ctas }}
+      <div class="mt-4">
+        {{ range .ctas }}
+          <a class="btn wvu-b-btn btn-sm mb-1" href="{{ .url }}">{{ .text }}</a>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+  <div class="col-xxl-16">
+    <ul class="wvu-column-count-lg-3 list-unstyled">
+      {{ range .links }}
+        <li class="position-relative ps-4"><span class="fa-solid fa-chevron-right wvu-b-accent-text position-absolute small" style="top: 6px; left: 0;"></span> <a class="text-decoration-none" href="{{ .url }}">{{ .text }}</a></li></li>
+      {{ end }}
+    </ul>
+  </div>
+</div>

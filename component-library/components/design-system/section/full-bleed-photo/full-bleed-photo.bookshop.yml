@@ -1,0 +1,56 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - photo_essay_blocks
+    - place_blocks
+  label: "Full-Bleed Photo"
+  description: A photo that extends the width of the browser.
+  icon: panorama
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  src:
+  alt:
+  caption:
+  settings:
+    config:
+      name: full-bleed-photo
+      edit_mode_only: false
+      include_heading_postscript: false
+  is_dynamic: false
+  is_nested: false
+  use_common_wrapper: false
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  alt:
+    hidden: '!src'
+    options:
+      required: true
+  caption:
+    type: textarea
+  include_heading_postscript:
+    hidden: true
+  is_dynamic:
+    hidden: true
+  is_nested:
+    hidden: true
+  settings:
+    type: object
+    hidden: true
+    options:
+      subtype: tabbed
+  src:
+    type: image
+    options:
+      allowed_sources:
+        - ccdam
+      width: 1920
+      height: 1080
+  use_common_wrapper:
+    type: auto
+    hidden: true

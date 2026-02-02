@@ -1,0 +1,50 @@
+{{ $containerMargin := "" }}
+{{ $sidebarMargin := "" }}
+
+{{ $related := slice }}
+
+{{- if not site.Params.env_bookshop_live -}}
+  {{ $related = .related }}
+{{- end -}}
+
+{{ if and .topper .topper._bookshop_name }}
+  {{ partial "bookshop" (slice .topper._bookshop_name (dict "topper" .topper "params" .params "title" .params.title "subheading" .params.subheading "authors" .params.authors "image" .params.article_image)) }}
+  {{ if ne .topper._bookshop_name "design-system/topper/article" }}
+    {{ $containerMargin = "mt-n9" }}
+    {{ $sidebarMargin = "mt-8" }}
+  {{ end }}
+{{ else }}
+  {{ partial "bookshop" (slice "design-system/topper/article" (dict "topper" .topper "params" .params "title" .params.title "subheading" .params.subheading)) }}
+{{ end }}
+
+
+<div class="py-6 position-relative audience-general tone-default wvu-b-subtle">
+  <div class="container {{ $containerMargin }}">
+    <div class="row">
+      <div class="col-xl-5"></div>
+      <div class="col-xl-14 mb-5 mb-xl-0">
+        <div class="bg-option-1 p-5 p-lg-6 {{ if and .topper (or (eq .topper._bookshop_name "design-system/topper/article") (not .topper)) }}mt-n6{{ end }}">
+          <div class="antonia-regular text-dark fs-5 ">
+            {{ range .article_blocks }}
+              <div class="mb-5">
+                {{ partial "bookshop" . }}
+              </div>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-5" data-pagefind-ignore="all">
+        {{- if not site.Params.env_bookshop_live -}}
+          {{ with $related | first 5 }}
+            <h2 class="h6 wvu-b-label {{ $sidebarMargin }}">Related</h2>
+            <ul class="wvu-ul-chevrons">
+              {{ range . }}
+                <li><a class="text-decoration-none" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+              {{ end }}
+            </ul>
+          {{ end }}
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</div>

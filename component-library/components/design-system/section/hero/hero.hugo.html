@@ -1,0 +1,64 @@
+{{ $src := .background_image }}
+{{ $headingSize := "display-3" }}
+
+{{ if .settings.styles.heading_size }}
+  {{ $headingSize = .settings.styles.heading_size }}
+{{ end }}
+
+{{- if not site.Params.env_bookshop_live -}}
+  {{ $image := "" }}
+  {{/*  Get the image, either from its remote or local source  */}}
+  {{ if hasPrefix $src "http"}}
+    {{ $image = resources.GetRemote .background_image }}
+  {{ else }}
+    {{ $image = resources.Get .background_image }}
+  {{ end }}
+
+  {{/* Resize images and add them to a variable  */}}
+  {{ if and $image (ne $image.MediaType.SubType "svg") }}
+    {{ if eq .imageProcess "fit" }}
+      {{ $src = ($image.Fit (printf "%dx%d webp" 1920 1080)).RelPermalink }}
+    {{ else }}
+      {{ $src = ($image.Fill (printf "%dx%d webp" 1920 1080)).RelPermalink }}
+    {{ end }}
+  {{ end }}
+{{- end -}}
+
+<div class="row">
+  <div class="col-xl-16 col-xxl-12 {{ .settings.layout.text_placement }}">
+
+    {{ if .label }}
+      <p class="h6 mb-6 wvu-b-label">{{ .label }}</p>
+    {{ end }}
+    
+    <h2 id="{{ .settings.config.name }}-label" class="wvu-b-display-heading wvu-b-accent-text wvu-b-text-shadow wvu-b-text-outline {{ $headingSize }} mb-n2" data-text="{{ . }}">
+      <span class="wvu-b-font-adjust">{{ .heading }}</span>
+    </h2>
+
+    {{ if .subheading }}
+      <p class="fs-3 wvu-b-text wvu-b-subheading mt-4"><span class="xwvu-b-font-adjust">{{ .subheading }}</span></p>
+    {{ end }}
+
+    {{ if .body_text }}
+      <div class="wvu-b-text mt-4">
+        {{ .body_text | markdownify }}
+      </div>
+    {{ end }}
+
+    {{ if .ctas }}
+      <div class="mt-4">
+        {{ range .ctas }}
+          <a class="btn wvu-b-btn btn-lg mb-1" href="{{ .url }}">{{ .text }} {{ with .icon }}<span class="fa-regular fa-{{ . }}"></span>{{ end }}</a>
+        {{ end }}
+      </div>
+    {{ end }}
+
+    {{ if .postscript_links }}
+      <div class="mt-4">
+        {{ range .postscript_links }}
+          <a href="{{ .url }}">{{ .text }}</a>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+</div>

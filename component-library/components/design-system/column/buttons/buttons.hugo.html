@@ -1,0 +1,10 @@
+{{ $color := "primary" }}
+
+<div class="mb-5">
+  {{ range .buttons }}
+    {{ if .button_c }}
+      {{ $color = .button_c }}
+    {{ end }}
+    <a class="btn btn-{{ $color }} btn-lg mb-1 me-1" href="{{ .url }}">{{ .text }}</a>
+  {{ end }}
+</div>

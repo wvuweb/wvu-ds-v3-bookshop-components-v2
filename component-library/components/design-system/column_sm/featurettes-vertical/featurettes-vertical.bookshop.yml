@@ -1,0 +1,76 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - column_blocks_sm
+    - detail_sidebar_blocks
+  label: "Featurettes - Vertical"
+  description: Stacked image-and-text items with optional buttons.
+  icon: table_rows
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  heading: Heading
+  subheading: Subheading.
+  items:
+    - title: Item 1 Title
+      image:
+      alt_text:
+      # label:
+      # badge:
+      url:
+  settings:
+    styles:
+      audience: general
+    layout:
+    config:
+  is_dynamic: false
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  audience:
+    type: choice
+    options:
+      allow_empty: false
+      values:
+        - name: General
+          class: general
+        - name: Academic / Traditional
+          class: alumni
+        - name: Modern + Formal
+          class: leaders_partners
+        - name: Prospective Students
+          class: prospective_students
+      value_key: class
+    label: Style
+  alt_text:
+    hidden: '!image'
+    options:
+      required: true
+  badge:
+    hidden: true
+  config:
+    hidden: true
+  image:
+    type: image
+    options:
+      allowed_sources:
+        - ccdam
+      width: 1920
+      height: 1080
+  is_dynamic:
+    hidden: true
+  layout:
+    hidden: true
+  label:
+    hidden: true
+  settings:
+    type: object
+    hidden: true
+    options:
+      subtype: tabbed
+  text:
+    type: textarea

@@ -1,0 +1,60 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - column_blocks_sm
+    - detail_sidebar_blocks
+  label: "Info Card"
+  description: For including larger bodies of content.
+  icon: info
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  heading: Heading
+  heading_level: H3
+  subheading:
+  copy:
+  card_c:
+  is_dynamic: false
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  copy:
+    type: markdown
+    options:
+      blockquote: true
+      bold: true
+      bulletedlist: true
+      embed: true
+      format: p h1 h2 h3 h4 h5 h6 pre address div
+      italic: true
+      image: false
+      indent: true
+      join_above: true
+      join_below: true
+      link: true
+      numberedlist: true
+      outdent: true
+      strike: true
+      subscript: true
+      superscript: true
+      table: true
+      underline: true
+      code: true
+      style: /assets/scss/custom/_content.scss
+      allowed_sources:
+        - ccdam
+  card_c:
+    hidden: true
+  heading_level:
+    type: select
+    options:
+      allow_empty: false
+      values:
+        - H2
+        - H3
+  is_dynamic:
+    hidden: true

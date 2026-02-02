@@ -1,0 +1,115 @@
+{{ $heading := "" }}
+{{ $articles := "" }}
+{{ $limit := 5 }}
+
+{{ if .heading }}
+  {{ $heading = .heading }}
+{{ end }}
+
+{{ if .limit }}
+  {{ $limit = .limit }}
+{{ end }}
+
+{{ $tags := slice }}
+
+{{ if .tags }}
+  {{ $tags = .tags }}
+{{ end }}
+
+{{ $heading := .heading }}
+
+{{ if or site.Params.env_bookshop_live (ne .config.edit_mode_only true) }}
+
+  {{ if not site.Data }}
+    {{ partial "bookshop" (slice "design-system/generic/collection-tooltip" (dict "text" "This component will not display content inside the Bookshop browser." ) ) }}
+  {{ else if and (site.Params.env_bookshop_live) (not .show_content) }}
+    {{ partial "bookshop" (slice "design-system/generic/collection-tooltip" .) }}
+  {{ else }}
+    {{ $authorData := site.Data.people.authors }}
+
+    {{ if not site.Params.env_bookshop_live }}
+      {{ $articles = where site.Pages "Section" "articles" }}
+      {{ $articles = where $articles "Params.tags" "intersect" $tags }}
+    {{ else }}
+      {{ $articles = where site.Data.site_pages ".type" "articles" }}
+      {{ $articles = where $articles ".tags" "intersect" $tags }}
+    {{ end }}
+
+    <div class="bg-wvu-not-quite-white p-4 h-100">
+      {{ range first 1 $articles }}
+
+        {{ $params := "" }}
+        {{ $link := "" }}
+
+        {{ if not site.Params.env_bookshop_live }}
+          {{ $params = .Params }}
+          {{ $link = .RelPermalink }}
+        {{ else }}
+          {{ $params = . }}
+        {{ end }}
+
+        {{ $authors := slice }}
+        {{ if $params.authors }}
+          {{ $authors = $params.authors }}
+        {{ end }}
+        {{ $authorList := slice }}
+        {{ range $authorData }}
+          {{ $author := . }}
+          {{ range $authors }}
+            {{ if eq .uuid $author.id }}
+              {{ $authorList = $authorList | append $author }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+
+        <div class="wvu-articles h-100">
+          <div class="h-100" itemscope="" itemtype="http://schema.org/BlogPosting">
+            <div class="row h-100">
+
+              <div class="wvu-article__thumb col-md-12">
+                <a class="wvu-article-link d-block w-100 h-100 text-center" href="{{ $link }}" aria-hidden="true" tabindex="-1">
+                  {{ partial "bookshop" (slice "design-system/generic/img" (dict "src" $params.image "width" 960 "height" 640 "classes" "h-100 object-fit-cover" "alt" $params.alt_text)) }}
+                </a>
+              </div>
+
+              <div class="col-md-12 mt-3 mt-md-0">
+
+                {{ with $heading }}
+                  <h2 class="h6 oliviar-black mb-4 pt-2 wvu-b-label">{{ . }}</h2>
+                {{ end }}
+
+                <h3 class="fs-4" itemprop="headline"><a class="newsletter-link text-decoration-none" href="{{ $link }}">{{ $params.title }}</a></h3>
+
+                {{ if or (not $params.hide_author) ( $params.publishDate ) }}
+                  <p class="small d-block">
+                    {{ if not $params.hide_author }}
+                      {{ range $authorList }}
+                        <span class="wvu-article__author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+                          <span itemprop="name">
+                            {{ .name }}
+                          </span>
+                        </span>
+                      {{ end }}
+                    {{ end }}
+
+                    {{ if and (not $params.hide_author) ( $params.publishDate ) }} | {{ end }}
+
+                    {{ if $params.publishDate }}
+                      <time datetime="{{ $params.publishDate }}">{{ $params.publishDate | time.Format "Monday, January 2, 2006" }}</time>
+                    {{ end }}
+                  </p>
+                {{ end }}
+
+                {{ with $params.excerpt }}
+                  {{ . | markdownify }}
+                {{ end }}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  {{ end }}
+
+{{ end }}

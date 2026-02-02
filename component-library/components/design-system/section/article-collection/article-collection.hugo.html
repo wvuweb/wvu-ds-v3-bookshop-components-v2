@@ -1,0 +1,168 @@
+{{ $limit := "5" }}
+{{ $hideThumbnails := "" }}
+{{ $cardColor := "" }}
+
+{{ if .settings.config.limit }}
+  {{ $limit = .settings.config.limit }}
+  {{ $limit = int $limit }}
+{{ end }}
+
+{{ $tags := slice }}
+
+{{ if .tags }}
+  {{ $tags = .tags }}
+{{ end }}
+
+{{ $heading := .heading }}
+
+{{ if .settings.config.hide_thumbnails }}
+  {{ $hideThumbnails = .settings.config.hide_thumbnails }}
+{{ end }}
+
+{{ if not site.Data }}
+  {{ partial "bookshop" (slice "design-system/generic/collection-tooltip" (dict "text" "This component will not display content inside the Bookshop browser." ) ) }}
+{{ else if and (site.Params.env_bookshop_live) (not .settings.config.show_content) }}
+  {{ partial "bookshop" (slice "design-system/generic/collection-tooltip-dynamic-component" .) }}
+{{ else }}
+
+  {{ $articles := slice }}
+  {{ $photoEssays := slice }}
+  {{ $authorData := slice }}
+
+  {{ if not site.Params.env_bookshop_live }}
+    {{ $articles = where site.Pages "Section" "articles" }}
+    {{ $articles = where $articles "Params.tags" "intersect" $tags }}
+    {{ $articles = sort $articles "Params.publishDate" "desc" }}
+    {{ $authorData = where site.Pages "Section" "people" }}
+    {{ $authorData = where $authorData "Params.type" "eq" "author" }}
+  {{ else }}
+    {{ $articles = where site.Data.site_pages ".type" "eq" "articles" }}
+    {{ $photoEssays = where site.Data.site_pages ".type" "eq" "photo-essay" }}
+    {{ $articles = $articles | append $photoEssays }}
+    {{ $articles = where $articles ".tags" "intersect" $tags }}
+    {{ $articles = sort $articles ".publishDate" "desc" }}
+    {{ $authorData = where site.Data.people_data ".type" "author" }}
+  {{ end }}
+
+  <div class="row gx-lg-5 mb-n4">
+    {{ if $articles }}
+      {{ with $articles }}
+        {{ range first $limit . }}
+
+          {{ $params := "" }}
+          {{ $link := "" }}
+
+          {{ if not site.Params.env_bookshop_live }}
+            {{ $params = .Params }}
+            {{ $link = .RelPermalink }}
+          {{ else }}
+            {{ $params = . }}
+          {{ end }}
+
+          {{ with $params.alternate_url }}
+            {{ $link = . }}
+          {{ end }}
+
+          {{ $authors := slice }}
+
+          {{ if $params.authors }}
+            {{ $authors = $params.authors }}
+          {{ end }}
+          
+          {{ $authorList := slice }}
+
+          {{ range $authorData }}
+            {{ $author := . }}
+            {{ if not site.Params.env_bookshop_live }}
+              {{ $author = .Params }}
+            {{ end }}
+            {{ range $authors }}
+              {{ if eq .author $author.uuid }}
+                {{ $authorList = $authorList | append $author }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+          
+          {{ $src := $params.article_image }}
+          {{ $alt := $params.article_image_alt_text }}
+
+          {{- if not site.Params.env_bookshop_live -}}
+            {{ $image := "" }}
+            {{/*  Get the image, either from its remote or local source  */}}
+            {{ if hasPrefix $src "http"}}
+              {{ $image = resources.GetRemote $params.article_image }}
+            {{ else }}
+              {{ $image = resources.Get $params.article_image }}
+            {{ end }}
+
+            {{/* Resize images and add them to a variable  */}}
+            {{ if and $image (ne $image.MediaType.SubType "svg") }}
+              {{ $src = ($image.Fill (printf "%dx%d webp" 960 640)).RelPermalink }}
+            {{ end }}
+          {{- end -}}
+          
+          <div class="col-lg-12 col-xl-6 mb-4">
+            <div class="mb-4 position-relative wvu-b-subtle wvu-b-shadow wvu-b-border" itemscope="" itemtype="http://schema.org/BlogPosting">
+              {{ if and $src (not $hideThumbnails) }}
+                <div class="wvu-article__thumb">
+                  <div class="ratio ratio-3x2 bg-light">
+                    <a class="wvu-article-link" href="{{ $link }}" aria-hidden="true" tabindex="-1">
+                      <img class="h-100 w-100 object-fit-cover" src="{{ $src }}" alt="{{ $alt }}" />
+                    </a>
+                  </div>
+                </div>
+              {{ end }}
+
+              <div class="mt-3 mt-md-0 p-4">
+                {{ if not $heading }}
+                  <h2 class="h4 wvu-b-display-heading" itemprop="headline"><a class="wvu-b-display-heading text-decoration-none stretched-link" href="{{ $link }}">{{ $params.title }}</a></h2>
+                {{ else }}
+                  <h3 class="h4 wvu-b-display-heading" itemprop="headline"><a class="wvu-b-display-heading text-decoration-none stretched-link" href="{{ $link }}">{{ $params.title }}</a></h3>
+                {{ end }}
+
+                {{ if or (not $params.config.hide_author) ( $params.publishDate ) }}
+                  <p class="small d-block mb-2">
+                    {{ if not $params.config.hide_author }}
+                      {{ with $authorList }}
+                        {{ range . }}
+                          <span class="wvu-article__author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+                            <span itemprop="name">
+                              {{ .name }}
+                            </span>
+                          </span>
+                        {{ end }}
+                      {{ end }}
+                    {{ end }}
+
+                    {{ if and $authorList (not $params.config.hide_author) ( $params.publishDate ) }} | {{ end }}
+
+                    {{ if $params.publishDate }}
+                      <time datetime="{{ $params.publishDate }}">{{ $params.publishDate | time.Format "Monday, January 2, 2006" }}</time>
+                    {{ end }}
+                  </p>
+                {{ end }}
+
+                {{ with $params.teaser }}
+                  <p class="small mb-0">{{ . }}</p>
+                {{ end }}
+              </div>
+
+            </div>
+          </div>
+        {{ end }}
+        <div class="mt-n3 d-flex align-items-center justify-content-center">
+          <div>
+            <h2 class="h6 d-inline-block me-2">View All:</h2>
+            <p class="d-inline-block">
+              {{ range $tags }}
+                <a class="py-2 px-3 me-2 rounded-pill small text-decoration-none mb-3 d-inline-block wvu-b-btn wvu-b-subtle" href="/tags/{{ . | urlize }}/">{{ . }}</a>
+              {{ end }}
+            </p>
+          </div>
+        </div>
+      {{ end }}
+    {{ else }}
+      <p class="text-center">No articles at this time.</p>
+    {{ end }}
+  </div>
+{{ end }}

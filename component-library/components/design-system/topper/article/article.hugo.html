@@ -1,0 +1,40 @@
+{{ $alt := "" }}
+{{ $containerStyles := "" }}
+{{ $publishDate := .params.publishDate }}
+{{ $showByline := false }}
+{{ $format := "January 2, 2006" }}
+
+{{ if and (not site.Params.env_bookshop_live) .params.publishDate }}
+  {{ $publishDate = .params.publishDate }}
+  {{ $publishDate = time.AsTime $publishDate }}
+  {{ $publishDate = $publishDate.Format $format }}
+{{ end }}
+
+{{ if and .topper .topper.show_byline }}
+  {{ $showByline = .topper.show_byline }}
+{{ end }}
+
+<header id="" class="position-relative">
+  <div class="container wvu-z-index-content pt-8 pb-4">
+    <div class="row">
+      <div class="col-xl-16 mx-xl-auto text-center">
+        <h1 class="display-5 wvu-b-display-heading mb-3" data-pagefind-meta="title">{{ if .params.title }}{{ .params.title }}{{ end }}</h1>
+        {{ if .params.subheading }}
+          <p class="wvu-b-subheading fs-4 mb-0">{{ .params.subheading }}</p>
+        {{ end }}
+        <p class="mt-4 mb-0 config-light text-uppercase wvu-text-letter-spacing" data-pagefind-ignore>{{ $publishDate }}</p>
+        <div class="d-flex mt-4 justify-content-center" data-pagefind-ignore="all">
+          {{ if not site.Data }}
+            {{ partial "bookshop" (slice "design-system/generic/collection-tooltip" (dict "text" "Byline will not display content in the live editor." ) ) }}
+          {{ else if not site.Params.env_bookshop_live }}
+            {{ if and .params.authors .topper .topper.show_byline }}
+              {{ partial "bookshop" (slice "design-system/simple/byline" (dict "params" .params)) }}
+            {{ end }}
+          {{ else }}
+            {{ partial "bookshop" (slice "design-system/generic/collection-tooltip-dynamic-component" .) }}
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

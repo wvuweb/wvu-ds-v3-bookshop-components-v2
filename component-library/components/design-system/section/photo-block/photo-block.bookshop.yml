@@ -1,0 +1,52 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - photo_essay_blocks
+  label: "Photo Block"
+  description: Add photos in main container.
+  icon: photo
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  photos:
+    - image:
+      alt_text:
+      caption:
+  settings:
+    config:
+      name: photo-block
+  is_dynamic: false
+  is_nested: false
+  use_common_wrapper: true
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  alt_text:
+    hidden: '!image'
+    options:
+      required: true
+  caption:
+    hidden: true
+  image:
+    type: image
+    options:
+      allowed_sources:
+        - ccdam
+      width: 1920
+      height: 1080
+  is_dynamic:
+    hidden: true
+  is_nested:
+    hidden: true
+  settings:
+    type: object
+    hidden: true
+    options:
+      subtype: tabbed
+  use_common_wrapper:
+    type: auto
+    hidden: true

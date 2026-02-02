@@ -1,0 +1,29 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - footer_blocks
+  label: "Quicklinks"
+  description:
+  icon:
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  heading: Quicklinks
+  f_quicklink_items:
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  f_quicklink_items:
+    type: array
+    options:
+      structures: _structures.quicklink_item
+_structures:
+  quicklink_item:
+    values:
+      - value:
+          text:
+          url:

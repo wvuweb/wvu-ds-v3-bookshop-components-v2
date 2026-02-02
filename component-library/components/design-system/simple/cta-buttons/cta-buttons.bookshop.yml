@@ -1,0 +1,58 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+  label: "CTA Buttons"
+  description:
+  icon:
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  buttons:
+    - text:
+      icon:
+      url:
+      button_c:
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  button_c:
+    type: select
+    options:
+      values: _select_data.brand_colors
+      value_key: class
+_select_data:
+  brand_colors:
+    - name: Default
+      class: wvu-b-btn
+    - name: Gold
+      class: btn-wvu-gold
+    - name: Blue
+      class: btn-wvu-blue
+    - name: Safety Blue
+      class: btn-wvu-safety-blue
+    - name: Coal
+      class: btn-wvu-coal
+    - name: Star City Blue
+      class: btn-wvu-star-city-blue
+    - name: Canary
+      class: btn-wvu-canary
+    - name: Old Gold
+      class: btn-wvu-old-gold
+    - name: Sunset
+      class: btn-wvu-sunset
+    - name: Not Quite White
+      class: btn-wvu-not-quite-white
+    - name: Cooper's Gray
+      class: btn-wvu-coopers-gray
+    - name: Seneca Gray
+      class: btn-wvu-seneca-gray
+    - name: Rattler Gray
+      class: btn-wvu-rattler-gray
+    - name: Wild Flour
+      class: btn-wvu-wild-flour
+    - name: Buckskin
+      class: btn-wvu-buckskin

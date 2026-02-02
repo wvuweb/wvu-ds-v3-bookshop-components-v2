@@ -1,0 +1,106 @@
+{{ $authorData := slice }}
+{{ $authorList := slice }}
+{{ $photographerList := slice }}
+
+{{ if not site.Params.env_bookshop_live }}
+  {{ $authorData = where site.RegularPages "Params._schema" "author" }}
+{{ else }}
+  {{ $authorData = where site.Data.people_data ".schema" "author" }}
+{{ end }}
+
+{{ $byline := slice }}
+
+{{ with .authors }}
+  {{ $byline = . }}
+{{ end }}
+
+{{ range $authorData }}
+
+  {{ $author := "" }}
+  {{ $photographer := "" }}
+
+  {{ if not site.Params.env_bookshop_live }}
+    {{ $author = .Params }}
+  {{ else }}
+    {{ $author = . }}
+  {{ end }}
+
+  {{ range $byline }}
+    {{ $role := "" }}
+    
+    {{ if .article_role }}
+      {{ $role = .article_role }}
+    {{ end }}
+
+    {{ $author = dict
+      "name" $author.name
+      "profileImage" $author.profile_image
+      "role" $role
+      "uuid" $author.uuid
+      "alt" $author.alt_text
+    }}
+
+    {{ if and (eq $role "Author") (eq .author $author.uuid) }}
+      {{ $authorList = $authorList | append $author }}
+    {{ else if and (eq $role "Photographer") (eq .author $author.uuid) }}
+      {{ $photographerList = $photographerList | append $author }}
+    {{ end }}
+
+  {{ end }}
+{{ end }}
+
+<div class="w-100">
+  {{ if $authorList }}
+    <p class="wvu-author-list small lh-1 mb-0 text-center mb-4">
+      <span class="antonia-light d-block mb-2 wvu-text-letter-spacing">Written by</span>
+      {{ range $authorList }}
+
+        {{ $src := .profileImage }}
+
+        {{- if not site.Params.env_bookshop_live -}}
+          {{ $profileImage := "" }}
+          {{/*  Get the image, either from its remote or local source  */}}
+          {{ if hasPrefix $src "http"}}
+            {{ $profileImage = resources.GetRemote .profileImage }}
+          {{ else }}
+            {{ $profileImage = resources.Get .profileImage }}
+          {{ end }}
+
+          {{/* Resize images and add them to a variable  */}}
+          {{ if and $profileImage (ne $profileImage.MediaType.SubType "svg") }}
+            {{ $src = ($profileImage.Fill (printf "%dx%d webp" 100 100)).RelPermalink }}
+          {{ end }}
+        {{- end -}}
+
+        <span class="wvu-author config-extra-bold text-uppercase d-inline">{{ .name }}</span>
+      {{ end }}
+    </p>
+  {{ end }}
+
+  {{ if $photographerList }}
+    <p class="wvu-author-list small lh-1 mb-0 text-center">
+      <span class="antonia-light d-block mb-2 wvu-text-letter-spacing">Photography by</span>
+      {{ range $photographerList }}
+
+        {{ $src := .profileImage }}
+
+        {{- if not site.Params.env_bookshop_live -}}
+          {{ $profileImage := "" }}
+          {{/*  Get the image, either from its remote or local source  */}}
+          {{ if hasPrefix $src "http"}}
+            {{ $profileImage = resources.GetRemote .profileImage }}
+          {{ else }}
+            {{ $profileImage = resources.Get .profileImage }}
+          {{ end }}
+
+          {{/* Resize images and add them to a variable  */}}
+          {{ if and $profileImage (ne $profileImage.MediaType.SubType "svg") }}
+            {{ $src = ($profileImage.Fill (printf "%dx%d webp" 100 100)).RelPermalink }}
+          {{ end }}
+        {{- end -}}
+
+        <span class="wvu-author config-extra-bold text-uppercase d-inline">{{ .name }}</span>
+      {{ end }}
+    </p>
+  {{ end }}
+</div>

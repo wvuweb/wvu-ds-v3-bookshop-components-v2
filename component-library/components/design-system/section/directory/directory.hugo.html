@@ -1,0 +1,97 @@
+{{ $directoryData := slice }}
+{{ $directory := slice }}
+
+{{- if not site.Params.env_bookshop_live -}}
+  {{ $directoryData = where site.RegularPages "Section" "eq" "people" }}
+  {{ $directoryData = where $directoryData "Params.dir_include" true }}
+  {{ $directory = sort $directoryData "Params.last_name" "asc" }}
+{{ else }}
+  {{ if site.Data.people_data }}
+    {{ $directoryData = where site.Data.people_data "dir_include" true }}
+    {{ $directory = sort $directoryData "last_name" "asc" }}
+  {{ end }}
+{{ end }}
+
+<!-- Loop By: sort_order -->
+<section id="wvu-main-content" class="py-6 audience-general tone-default bg-option-1 wvu-b-subtle">  
+  <div class="container wvu-z-index-content">
+    <ul class="list-unstyled">
+      {{ range $directory }}
+
+        {{ $contact := "" }}
+
+        {{ if not site.Params.env_bookshop_live }}
+          {{ $contact = .Params }}
+        {{ else }}
+          {{ $contact = . }}
+        {{ end }}
+
+        {{ $src := $contact.profile_image }}
+
+        {{- if not site.Params.env_bookshop_live -}}
+          {{ $image := "" }}
+          {{/*  Get the image, either from its remote or local source  */}}
+          {{ if hasPrefix $src "http"}}
+            {{ $image = resources.GetRemote $src }}
+          {{ else }}
+            {{ $image = resources.Get $src }}
+          {{ end }}
+
+          {{/* Resize images and add them to a variable  */}}
+          {{ if and $image (ne $image.MediaType.SubType "svg") }}
+            {{ $src = ($image.Fill "webp center 960x960").RelPermalink }}
+          {{ end }}
+        {{- end -}}
+
+        <li class="border-bottom border-1 border-black-50 pt-4 pb-4 pb-sm-4 text-center text-sm-start">
+          <div class="row">
+            <div class="col-24 col-sm-8 mb-2 mb-sm-0">
+              <div class="row">
+                <div class="col-lg-8 col-xxl-6 my-2 my-lg-0">
+                  {{ if $contact.profile_image }}
+                    <div class="row">
+                      <div class="col-8 col-sm-24 mx-auto">
+                        <div class="ratio ratio-1x1">
+                          <img class="rounded-circle shadow w-100 h-100 object-fit-cover" src="{{ $src }}" alt="Firstname Lastname headshot">
+                        </div>
+                      </div>
+                    </div>
+                  {{ end }}
+                </div>
+                <div class="col-lg-16 col-xxl-18 d-sm-none d-lg-block">
+                  <p class="mb-0 py-2">
+                    <strong class="d-block">{{ $contact.name }}</strong>
+                    {{ range $contact.job_position }}
+                      <span class="d-block small mb-1">{{ range .job_title }}<span class="d-block"><strong>{{ . }}</strong></span>{{ end }}{{ if .organization }}{{ .organization }}{{ end }}</span>
+                    {{ end }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-24 col-sm-14">
+              <div class="row">
+                <div class="col-xl-12">
+                  <p class="mb-0 py-2">
+                    {{ range $contact.staff_contact_info }}
+                      {{ if eq ._bookshop_name "design-system/simple/phone" }}
+                        <span class="fa-solid fa-phone"></span> <a href="tel:{{ .phone_n }}">{{ .phone_n }}</a><br>
+                      {{ end }}
+                      {{ if eq ._bookshop_name "design-system/simple/email" }}
+                        <span class="fa-solid fa-envelope"></span> <a href="mailto:{{ .address }}">{{ .address }}</a><br>
+                      {{ end }}
+                    {{ end }}
+                  </p>
+                </div>
+                <div class="col-xl-12">
+                  <p class="mb-0 py-2">
+                    <span class="fa-solid fa-user-circle"></span> <a href="{{ .RelPermalink }}">View Profile<span class="visually-hidden">: Lorem Ipsum Dolor Sit Amet Consectetur</span></a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      {{ end }}
+    </ul>
+  </div>
+</section>

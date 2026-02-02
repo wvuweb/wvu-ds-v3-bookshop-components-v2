@@ -1,0 +1,77 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - photo_essay_blocks
+    - place_blocks
+  label: "Gallery"
+  description: A gallery of images
+  icon: collections
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  # heading:
+  # subheading:
+  images:
+  is_dynamic: false
+  is_nested: false
+  use_common_wrapper: true
+  settings:
+    config:
+      name: gallery
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  images:
+    type: array
+    options:
+      structures: _structures.images
+  is_dynamic:
+    hidden: true
+  is_nested:
+    hidden: true
+  settings:
+    type: object
+    hidden: true
+    options:
+      subtype: tabbed
+  use_common_wrapper:
+    type: auto
+    hidden: true
+_structures:
+  images:
+    values:
+      - label: "Image"
+        value:
+          image_source:
+          image_alt:
+          image_caption:
+        preview:
+          text:
+            - key: image_alt
+            - "Image"
+          subtext: 
+            - key: image_source
+          image: 
+            - key: image_source
+          icon: image
+          metadata:
+            - icon: closed_caption
+              text:
+                - key: image_caption
+        _inputs:
+          image_alt:
+            options:
+              required: '!image_source'
+          image_source:
+            type: image
+            options:
+              allowed_sources:
+                - ccdam
+              width: 1920
+              height: 1080
+          image_caption:
+            type: textarea

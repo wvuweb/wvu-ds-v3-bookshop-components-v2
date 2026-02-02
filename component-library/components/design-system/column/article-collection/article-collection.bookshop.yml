@@ -1,0 +1,57 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - column_blocks
+  label: "Article Collection"
+  description: Grid of tagged articles.
+  icon: library_books
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  heading: Article Collection Heading
+  tags:
+  postscript:
+    ctas:
+  config:
+    limit:
+    show_content: false
+    hide_thumbnails: false
+  is_dynamic: true
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  copy:
+    type: markdown
+    options:
+      allowed_sources:
+        - ccdam
+  ctas:
+    type: array
+    options:
+      structures: _structures.links
+    cascade: true
+  is_dynamic:
+    hidden: true
+  limit:
+    type: number
+  show_content:
+    hidden: true
+  tags:
+    type: multiselect
+    options:
+      allow_create: true
+      allow_empty: true
+      values:
+        - featured
+_structures:
+  links:
+    style: select
+    values:
+      - value:
+          text:
+          icon:
+          url:

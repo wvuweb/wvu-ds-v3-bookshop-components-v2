@@ -1,0 +1,145 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - content_blocks
+  label: "Info Card"
+  description: For including larger bodies of content.
+  icon: info
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  heading:
+  subheading:
+  markdown:
+  background_image:
+  alt_text:
+  info_card_sidebar_blocks:
+  settings:
+    styles:
+      audience: general
+      tone: default
+      color_palette: option-1
+      bg_subtle: true
+      enable_blend: false
+      tint_opacity: "0.7"
+    layout:
+      buffer:
+      margin:
+      max_cols: 16
+      padding: py-6 py-xxl-7
+    config:
+      name: hero
+      edit_mode_only: false
+      include_heading_postscript: false
+  is_dynamic: false
+  is_nested: false
+  use_common_wrapper: true
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  alt_text:
+    hidden: '!background_image'
+    options:
+      required: true
+  audience:
+    type: choice
+    options:
+      allow_empty: false
+      values:
+        - name: General
+          class: general
+        - name: Academic / Traditional
+          class: alumni
+        - name: Modern + Formal
+          class: leaders_partners
+        - name: Prospective Students
+          class: prospective_students
+      value_key: class
+    label: Style
+  buffer:
+    type: select
+    options:
+      allow_empty: true
+      values: _select_data.buffers
+      value_key: class
+    cascade: true
+  color_palette:
+    type: choice
+    options:
+      allow_empty: false
+      values: _select_data.color_palettes
+      value_key: class
+  include_heading_postscript:
+    hidden: true
+  is_dynamic:
+    hidden: true
+  is_nested:
+    hidden: true
+  margin:
+    type: select
+    options:
+      allow_empty: true
+      values: _select_data.container_margins
+      value_key: class
+    cascade: true
+  padding:
+    hidden: true
+  settings:
+    type: object
+    options:
+      subtype: tabbed
+  tint_opacity:
+    hidden: true
+  tone:
+    type: choice
+    options:
+      allow_empty: false
+      values:
+        - name: Default
+          class: default
+        - name: Reserved
+          class: reserved
+        - name: Loud
+          class: loud
+        - name: Let’s Go!
+          class: lets-go
+      value_key: class
+  use_common_wrapper:
+    type: auto
+    hidden: true
+_select_data:
+  buffers:
+    - name: Buffer Top
+      class: pt-6
+    - name: Buffer Bottom
+      class: pb-6
+    - name: Buffer Both
+      class: py-6
+  color_palettes:
+    - name: Option 1
+      class: option-1
+    - name: Option 2
+      class: option-2
+    - name: Option 3
+      class: option-3
+    - name: Option 4
+      class: option-4
+    - name: Option 5
+      class: option-5
+    - name: Option 6
+      class: option-6
+    - name: Option 7
+      class: option-7
+    - name: Option 8
+      class: option-8
+  container_margins:
+    - name: Pull Up
+      class: mt-n8 mt-xxl-n9
+    - name: Pull Down
+      class: mb-n8 mb-xxl-n9
+    - name: Pull Both
+      class: my-n8 my-xxl-n9

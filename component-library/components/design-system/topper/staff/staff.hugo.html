@@ -1,0 +1,111 @@
+{{ $src := "" }}
+{{ $imageSize := "" }}
+{{ $backgroundColor := "bg-white text-dark" }}
+{{ $headingColor := "text-wvu-blue" }}
+{{ $pattern := "" }}
+{{ $patternOpacity := "1" }}
+
+{{ with .params.profile_image }}
+  {{ $src = . }}
+  {{ $imageSize = "960x960" }}
+{{ end }}
+
+{{ with .params.image_lg }}
+  {{ $src = . }}
+  {{ $imageSize = "960x640" }}
+{{ end }}
+
+{{ with .topper.background_image }}
+  {{ $src = . }}
+  {{ $imageSize = "1920x1280" }}
+{{ end }}
+
+{{ if .topper.settings.styles.color_palette }}
+  {{ $backgroundColor = .topper.settings.styles.color_palette }}
+{{ end }}
+
+{{ if and .topper.background_image (not .topper.settings.styles.enable_blend) }}
+  {{ $backgroundColor = "option-2" }}
+{{ end }}
+
+{{ if .topper.background_image }}
+  {{ $backgroundColor = "bg-dark text-white" }}
+{{ end }}
+
+{{- if not site.Params.env_bookshop_live -}}
+  {{ $image := "" }}
+  {{/*  Get the image, either from its remote or local source  */}}
+  {{ if hasPrefix $src "http"}}
+    {{ $image = resources.GetRemote $src }}
+  {{ else }}
+    {{ $image = resources.Get $src }}
+  {{ end }}
+
+  {{/* Resize images and add them to a variable  */}}
+  {{ if and $image (ne $image.MediaType.SubType "svg") }}
+    {{ $src = ($image.Fill (printf "%s center webp" $imageSize)).RelPermalink }}
+  {{ end }}
+{{- end -}}
+
+<section class="audience-{{ .topper.settings.styles.audience }} tone-{{ .topper.settings.styles.tone}} bg-{{ $backgroundColor }} position-relative py-7">
+  {{ if not .topper.background_image }}
+    {{ partial "bookshop_partial" (slice "section_background_simple" (dict "image" "" "styles" .topper.settings.styles "layout" .topper.settings.layout)) }}
+  {{ else }}
+    {{ partial "bookshop_partial" (slice "section_background_simple" (dict "image" $src "styles" .topper.settings.styles "layout" .topper.settings.layout)) }}
+  {{ end }}
+  <div class="container mb-5 wvu-z-index-content">
+    <div class="row align-items-center {{ if or .topper.background_image (not .params.image_lg) }}py-6{{ end }}">
+      <div class="col-lg-12 {{ if .topper.background_image }}{{ .topper.settings.layout.text_placement }}{{ else }}mx-auto{{ end }}">
+        <div class="row gx-4 gx-lg-5">
+
+          {{ if and .params.profile_image (not .topper.background_image) }}
+            {{ if not .params.image_lg }}
+              <div class="col-8">
+                <div class="ratio ratio-1x1">
+                  <img class="img-fluid h-100 w-100 rounded-circle object-fit-cover" src="{{ $src }}" />
+                </div>
+              </div>
+            {{ end }}
+          {{ end }}
+          <div class="col">
+            {{ with .label }}
+              <p class="wvu-b-label text-uppercase wvu-text-letter-spacing-lg mb-5">{{ . }}</p>
+            {{ end }}
+
+            {{ if .params.name }}
+              <h1 class="display-6 wvu-b-display-heading mb-4"><span class="wvu-b-font-adjust">{{ .params.name }}</span></h1>
+            {{ else }}
+              <h1 class="display-6 wvu-b-display-heading mb-4"><span class="wvu-b-font-adjust">Firstname Lastname</span></h1>
+            {{ end }}
+
+            {{ if .params.job_position }}
+              <div class="mb-4">
+                {{ range .params.job_position }}
+                  <p class="fs-5 lh-1">
+                    {{ if .job_title }}
+                      {{ range .job_title }}
+                        <span class="d-block helvetica-neue-bold">{{ . }}</span>
+                      {{ end }}
+                    {{ end }}
+                    {{ if .organization }}<span class="d-block helvetica-neue-light">{{ .organization }}</span>{{ end }}
+                  </p>
+                {{ end }}
+              </div>
+            {{ end }}
+
+            {{ if .params.staff_contact_info }}
+              <div class="mt-4">
+                {{ partial "bookshop_partial" (slice "page" .params.staff_contact_info) }}
+              </div>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+      {{ if and .params.image_lg (not .topper.background_image) }}
+        <div class="col-lg-12">
+          <img class="img-fluid wvu-shadow-filter border border-3 border-dark" src="{{ $src}}" alt="" />
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>

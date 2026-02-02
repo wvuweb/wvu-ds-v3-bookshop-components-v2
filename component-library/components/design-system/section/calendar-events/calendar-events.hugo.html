@@ -1,0 +1,5 @@
+<div>
+  {{ if not site.Params.env_bookshop_live }}
+    {{ .event_feed | safeHTML }}
+  {{ end }}
+</div>

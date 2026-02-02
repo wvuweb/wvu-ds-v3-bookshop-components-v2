@@ -1,0 +1,50 @@
+{{ $styles := .settings.styles }}
+
+<div class="mb-n5">
+  {{ range .items }}
+    <div class="wvu-b-subtle wvu-b-shadow wvu-b-border mb-5">
+      <div class="row gx-0">
+      
+        {{ $src := .image }}
+
+        {{- if not site.Params.env_bookshop_live -}}
+          {{ $image := "" }}
+          {{/*  Get the image, either from its remote or local source  */}}
+          {{ if hasPrefix $src "http"}}
+            {{ $image = resources.GetRemote $src }}
+          {{ else }}
+            {{ $image = resources.Get $src }}
+          {{ end }}
+        
+          {{/* Resize images and add them to a variable  */}}
+          {{ if and $image (ne $image.MediaType.SubType "svg") }}
+            {{ $src = ($image.Fill (printf "%dx%d webp" 960 640)).RelPermalink }}
+          {{ end }}
+        {{- end -}}
+
+        <div class="col-24 col-xl-8">
+          {{ if .image }}
+            <div class="h-100">
+              <img loading="lazy" class=" object-fit-cover" src="{{ $src }}" alt="{{ .alt_text }}" style="object-position: center; min-height: 100%;" />
+            </div>
+          {{ end }}
+        </div>
+        <div class="col-24 col-xl-16">
+          <div class="h-100">
+            <div class="position-relative p-5">
+              <h3 class="wvu-b-display-heading h1 mb-3"><span class="wvu-b-font-adjust">{{ .title }}</span></h3>
+              <p class="mb-3">{{ .markdown | markdownify }}</p>
+              {{ with .ctas }}
+                <div>
+                  {{ range . }}
+                    <a class="btn wvu-b-btn mb-1" href="{{ .url }}">{{ .text }}{{ with .icon }} <span class="fa-regular fa-{{ . }}"></span>{{ end }}</a>
+                  {{ end }}
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{ end }}
+</div>

@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-xl-18 mx-xl-auto">
+    <div class="row gx-5 justify-content-center">
+      {{ range .shorts }}
+        {{ $title := "" }}
+        {{ if .title }}
+          {{ $title = .title }}
+        {{ end }}            
+        <div class="col-lg-8 mb-5 mb-lg-0">
+          {{ partial "bookshop" (slice "design-system/generic/youtube-video" .) }}
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,121 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - column_blocks
+  label: "Poster - Split"
+  description: Two-column layout with text block and image.
+  icon: side_navigation
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  heading: Heading
+  subheading: Subheading goes here.
+  image:
+  alt_text:
+  body:
+  ctas:
+  postscript_links:
+  settings:
+    styles:
+      audience: general
+      tone: default
+      color_palette: option-4
+  is_dynamic: false
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  alt_text:
+    hidden: '!image'
+    options:
+      required: true
+  audience:
+    type: choice
+    options:
+      allow_empty: false
+      values:
+        - name: General
+          class: general
+        - name: Academic / Traditional
+          class: alumni
+        - name: Modern + Formal
+          class: leaders_partners
+        - name: Prospective Students
+          class: prospective_students
+      value_key: class
+    label: Style
+  color_palette:
+    type: choice
+    options:
+      allow_empty: false
+      values: _select_data.color_palettes
+      value_key: class
+  body:
+    type: markdown
+    options:
+      allowed_sources:
+        - ccdam
+  config:
+    hidden: true
+  ctas:
+    type: array
+    options:
+      structures: _structures.links
+  image:
+    type: image
+    options:
+      allowed_sources:
+        - ccdam
+      width: 1920
+      height: 1080
+  is_dynamic:
+    hidden: true
+  postscript_links:
+    type: array
+    options:
+      structures: _structures.links
+  settings:
+    type: object
+    options:
+      subtype: tabbed
+  tone:
+    type: choice
+    options:
+      allow_empty: false
+      values:
+        - name: Default
+          class: default
+        - name: Reserved
+          class: reserved
+        - name: Loud
+          class: loud
+      value_key: class
+_select_data:
+  color_palettes:
+    - name: Option 1
+      class: option-1
+    - name: Option 2
+      class: option-2
+    - name: Option 3
+      class: option-3
+    - name: Option 4
+      class: option-4
+    - name: Option 5
+      class: option-5
+    - name: Option 6
+      class: option-6
+    - name: Option 7
+      class: option-7
+    - name: Option 8
+      class: option-8
+_structures:
+  links:
+    style: select
+    values:
+      - value:
+          text:
+          icon:
+          url:

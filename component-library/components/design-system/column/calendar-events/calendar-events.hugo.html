@@ -1,0 +1,11 @@
+<div class="wvu-b-subtle p-5 h-100">
+  <h2 class="h4 mb-4 wvu-b-label">{{ .heading }}</h2>
+  {{ if site.Params.env_bookshop_live }}
+    {{ partial "bookshop" (slice "design-system/generic/collection-tooltip-dynamic-component" .) }}
+  {{ else }}
+    {{ .event_feed | safeHTML }}
+  {{ end }}
+  {{ if and .url .link_text }}
+    <a class="text-decoration-none small" href="{{ .url }}">{{ .link_text }} <span class="fa-regular fa-arrow-circle-right"></span></a>
+  {{ end }}
+</div>

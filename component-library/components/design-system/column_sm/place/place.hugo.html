@@ -1,0 +1,48 @@
+{{ $src := .image }}
+
+{{- if not site.Params.env_bookshop_live -}}
+  {{ $image := "" }}
+  {{/*  Get the image, either from its remote or local source  */}}
+  {{ if hasPrefix $src "http"}}
+    {{ $image = resources.GetRemote .image }}
+  {{ else }}
+    {{ $image = resources.Get .image }}
+  {{ end }}
+
+  {{/* Resize images and add them to a variable  */}}
+  {{ if and $image (ne $image.MediaType.SubType "svg") }}
+    {{ if eq .imageProcess "fit" }}
+      {{ $src = ($image.Fit (printf "%dx%d webp" 1920 1080)).RelPermalink }}
+    {{ else }}
+      {{ $src = ($image.Fill (printf "%dx%d webp" 1920 1080)).RelPermalink }}
+    {{ end }}
+  {{ end }}
+{{- end -}}
+
+<div class="row h-100 position-relative">
+  {{ if .image }}
+    <div class="wvu-place-img">
+      <img loading="lazy" alt="{{ .alt_text }}" class="w-100 h-100 object-fit-cover" width="2100px" height="1400px" src="{{ $src }}" style="z-index: -1;" />
+    </div>
+  {{ else }}
+    <div class="wvu-place-img">
+      <img class="w-100 h-100 object-fit-cover" src="https://placehold.co/2100x1400" style="z-index: -1;" />
+    </div>
+  {{ end }}
+  <div class="col-24 col-md-18 d-flex align-items-end">
+    <div class="mb-3 mt-md-8 wvu-b-subtle p-4 wvu-b-border wvu-b-shadow ms-md-3 w-100 wvu-z-index-content">
+      {{ with .label }}
+        <p class="h6 wvu-b-label small text-dark wvu-text-letter-spacing-lg mb-4 mt-n1" style="background-color: inherit;">{{ . }}</p>
+      {{ end }}
+      <h2 class="h5 wvu-b-display-heading mb-0"><span class="wvu-b-font-adjust">{{ .heading }}</span></h2>
+      <p class="mt-2 small mb-0">{{ .text }}</p>
+      {{ with .ctas }}
+        <ul class="list-unstyled mt-3 mb-0">
+          {{ range . }}
+            <li><a class="small text-decoration-none" href="{{ .url }}">{{ .text }} <span class="fa-regular fa-arrow-circle-right"></span></a></li>
+          {{ end }}
+        </ul>
+      {{ end }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - photo_essay_blocks
+  label: "Quote"
+  description: Large stylized quote block for emphasis.
+  icon: format_quote
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  quote_text:
+  quote_author:
+  title:
+  is_dynamic: false
+  is_nested: false
+  use_common_wrapper: true
+  settings:
+    config:
+      name: quote-photo-essay
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  is_dynamic:
+    hidden: true
+  is_nested:
+    hidden: true
+  quote_text:
+    type: textarea
+  settings:
+    type: object
+    hidden: true
+    options:
+      subtype: tabbed
+  title:
+    options:
+      required: false
+  use_common_wrapper:
+    type: auto
+    hidden: true

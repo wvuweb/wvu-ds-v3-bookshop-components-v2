@@ -1,0 +1,71 @@
+{{ $vibe := "" }}
+{{ $blendMode := "" }}
+{{ $opacity := "" }}
+{{ $pattern := "" }}
+{{ $patternColor := "" }}
+{{ $patternOpacity := "1" }}
+{{ $tintOpacity := "0.5" }}
+{{ $texture := false }}
+{{ $image := "" }}
+{{ $imageClasses := "object-fit-cover h-100 w-100 position-relative" }}
+
+{{ if and .styles .styles.vibe }}
+  {{ $vibe = .styles.vibe }}
+{{ end }}
+
+{{ if eq $vibe "wvu-experience" }}
+  {{ $pattern = "wvu-bg-texture" }}
+  {{ $patternOpacity = "0.4" }}
+{{ else if eq $vibe "down-to-business" }}
+  {{ $pattern = "wvu-bg-pattern-grid" }}
+  {{ $patternOpacity = "0.4" }}
+{{ else }}
+  {{ $pattern = "wvu-bg-topo-map" }}
+  {{ $patternOpacity = "0.1" }}
+{{ end }}
+
+{{ if and (eq $vibe "nostalgic") .styles.enable_blend }}
+  {{ $blendMode = "wvu-bg-blend-mode-lighten" }}
+{{ else if and .styles .styles.enable_blend }}
+  {{ $blendMode = "wvu-bg-blend-mode-luminosity" }}
+  {{ $opacity = "0.2" }}
+{{ end }}
+
+{{ if and .styles .styles.tint_opacity }}
+  {{ $tintOpacity = .styles.tint_opacity }}
+{{ end }}
+
+{{ $imageClasses = printf "%s%s%s" $imageClasses " " $blendMode }}
+
+<div class="wvu-bg-img">
+  {{ if .styles }}
+    {{ if or .styles.gradient_1 .styles.gradient_2 .styles.gradient_3 }}
+      <div class="d-flex w-100 h-100 justify-content-between position-absolute" style="background:
+        {{- if .styles.gradient_1 -}}
+          linear-gradient(200deg, rgba({{ .styles.gradient_1 }}, 1), transparent){{ if or .styles.gradient_2 .styles.gradient_3 }},{{ end }}
+        {{- end }}
+        {{ if .styles.gradient_2 }}
+          linear-gradient(300deg, rgba({{ .styles.gradient_2 }}, 1), transparent){{ if .styles.gradient_3 }},{{ end }}
+        {{ end }}
+        {{ if .styles.gradient_3 }}
+          linear-gradient(100deg, rgba({{ .styles.gradient_3 }}, 1), transparent)
+        {{ end }}
+      ">  
+      </div>
+    {{ end }}
+  {{ end }}
+  {{ if .image }}
+    <img class="{{ $imageClasses }}" src="{{ .image }}" style="opacity: {{ $opacity }}" alt="{{ .alt }}" />
+    {{ if not $blendMode }}
+      <div class="position-absolute wvu-bg-tint w-100 h-100" style="opacity: {{ $tintOpacity }}"></div>
+    {{ end }}
+  {{ end }}
+  {{ if and .styles .styles.enable_pattern (ne $pattern "wvu-bg-texture") (not .image) }}
+    <div class="{{ $pattern }} bg-white h-100 w-100" style="opacity: {{ $patternOpacity }}"></div>
+  {{ end }}
+  {{ if and .styles .styles.enable_pattern (eq $pattern "wvu-bg-texture") (not .image) }}
+    <div class="d-flex w-100 h-100 justify-content-between position-absolute">
+      
+    </div>
+  {{ end }}
+</div>

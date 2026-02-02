@@ -1,0 +1,52 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - column_blocks
+  label: "Place"
+  description: Image with side text.
+  icon: location_on
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  heading: Heading
+  image:
+  label: Places and Spaces
+  alt_text:
+  text: Descriptive text goes here.
+  ctas:
+    - text: Call to Action
+      url:
+  is_dynamic: false
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  alt_text:
+    hidden: '!image'
+    options:
+      required: true
+  ctas:
+    type: array
+    options:
+      structures: _structures.links
+  image:
+    type: image
+    options:
+      allowed_sources:
+        - ccdam
+      width: 1920
+      height: 1080
+      prevent_resize_existing_files: false
+  is_dynamic:
+    hidden: true
+_structures:
+  links:
+    style: select
+    values:
+      - value:
+          text:
+          icon:
+          url:

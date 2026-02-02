@@ -1,0 +1,148 @@
+{{ $heading := .heading }}
+
+<div class="row justify-content-center">
+  {{ with .office }}
+    {{ if .heading }}
+      <div class="col-md mb-4 mb-md-0">        
+        <div class="h3">
+          <span class="fa-solid fa-{{ .icon }}" aria-hidden="true"></span>
+        </div>
+        {{ if not $heading }}
+          <h2 class="h5">{{ .heading }}</h2>
+        {{ else }}
+          <h3 class="h5">{{ .heading }}</h3>
+        {{ end }}
+        {{ with .items }}
+          {{ range . }}
+            <address>
+              {{ if .heading }}
+                <strong class="d-block">{{ .heading }}</strong>
+              {{ end }}
+              {{ if .lines }}
+                {{ range .lines }}
+                  <span class="d-block">{{ . }}</span>
+                {{ end }}
+              {{ end }}
+            </address>
+            {{ with .ctas }}
+              <div class="mt-3">
+                {{ range . }}
+                  {{ if .button_c }}
+                    {{ $buttonColor = .button_c }}
+                  {{ end }}
+                  <a class="btn wvu-b-btn btn-sm mb-1" href="{{ .url }}">{{ .text }} {{ with .icon }}<span class="fa-regular fa-{{ . }}"></span>{{ end }}</a>
+                  {{ $buttonColor := "primary" }}
+                {{ end }}
+              </div>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    </div>
+  {{ end }}
+  {{ with .email }}
+    {{ if .heading }}
+      <div class="col-md">
+        <div class="h3">
+          <span class="fa-solid fa-{{ .icon }}" aria-hidden="true"></span>
+        </div>
+        {{ if not $heading }}
+          <h2 class="h5">{{ .heading }}</h2>
+        {{ else }}
+          <h3 class="h5">{{ .heading }}</h3>
+        {{ end }}
+        {{ if .items }}
+          {{ range .items }}
+            <p class="mb-0">
+              {{ if .heading }}
+                <strong class="d-block">{{ .heading }}</strong>
+              {{ end }}
+              <a href="mailto:{{ .email }}">{{ .email | safeHTML }}</a>
+            </p>
+            {{ with .ctas }}
+              <div class="mt-3">
+                {{ range . }}
+                  {{ if .button_c }}
+                    {{ $buttonColor = .button_c }}
+                  {{ end }}
+                  <a class="btn wvu-b-btn btn-sm mb-1" href="{{ .url | safeURL }}">{{ .text }} {{ with .icon }}<span class="fa-regular fa-{{ . }}"></span>{{ end }}</a>
+                  {{ $buttonColor := "primary" }}
+                {{ end }}
+              </div>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      </div>
+    {{ end }}
+  {{ end }}
+  {{ with .phone }}
+    {{ if .heading }}
+      <div class="col-md mb-4 mb-md-0">
+        <div class="h3">
+          <span class="fa-solid fa-{{ .icon }}" aria-hidden="true"></span>
+        </div>
+        {{ if not $heading }}
+          <h2 class="h5">{{ .heading }}</h2>
+        {{ else }}
+          <h3 class="h5">{{ .heading }}</h3>
+        {{ end }}
+        {{ with .items }}
+          {{ range . }}
+            <p class="mb-0">
+              {{ if .heading }}
+                <strong class="d-block">{{ .heading }}</strong>
+              {{ end }}
+              <span class="d-block"><a href="tel:{{ .phone | urlize }}">{{ .phone | safeHTML }}</a></span>
+            </p>
+            {{ with .ctas }}
+              <div class="mt-3">
+                {{ range . }}
+                  {{ if .button_c }}
+                    {{ $buttonColor = .button_c }}
+                  {{ end }}
+                  <a class="btn wvu-b-btn btn-sm mb-1" href="{{ .url | safeURL }}">{{ .text }} {{ with .icon }}<span class="fa-regular fa-{{ . }}"></span>{{ end }}</a>
+                  {{ $buttonColor := "primary" }}
+                {{ end }}
+              </div>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      </div>
+    {{ end }}
+  {{ end }}
+  {{ with .fax }}
+    {{ if .heading }}
+      <div class="col-md mb-4 mb-md-0">
+        <div class="h3">
+          <span class="fa-solid fa-{{ .icon }}" aria-hidden="true"></span>
+        </div>
+        {{ if not $heading }}
+          <h2 class="h5">{{ .heading }}</h2>
+        {{ else }}
+          <h3 class="h5">{{ .heading }}</h3>
+        {{ end }}
+        {{ with .items }}
+          {{ range . }}
+            <p class="mb-0">
+              {{ if .heading }}
+                <strong class="d-block">{{ .heading }}</strong>
+              {{ end }}
+              <span class="d-block">{{ .fax }}</span>
+            </p>
+            {{ with .ctas }}
+              <div class="mt-3">
+                {{ range . }}
+                  {{ if .button_c }}
+                    {{ $buttonColor = .button_c }}
+                  {{ end }}
+                  <a class="btn wvu-b-btn btn-sm mb-1" href="{{ .url }}">{{ .text }} {{ with .icon }}<span class="fa-regular fa-{{ . }}"></span>{{ end }}</a>
+                  {{ $buttonColor := "primary" }}
+                {{ end }}
+              </div>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      </div>
+    {{ end }}
+  {{ end }}
+</div>

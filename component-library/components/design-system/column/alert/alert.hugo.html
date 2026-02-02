@@ -1,0 +1,15 @@
+<div class="alert alert-{{ .alert_type | urlize }} p-4 my-4">
+  <div class="row">
+    {{ with .icon }}
+      <div class="col-6">
+        <span class="fa-regular fa-{{ . }} display-2"></span>
+      </div>
+    {{ end }}
+    <div class="col">
+      {{ with .heading }}
+        <h2 class="fs-3">{{ . }}</h2>
+      {{ end }}
+      {{ .markdown | markdownify }}
+    </div>
+  </div>
+</div>

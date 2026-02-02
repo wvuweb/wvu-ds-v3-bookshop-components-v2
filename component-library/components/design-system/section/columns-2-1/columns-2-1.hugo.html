@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="col-xl-16">
+    {{ with .column_a }}
+      {{ partial "bookshop" . }}
+    {{ end }}
+  </div>
+  <div class="col-xl-8">
+    {{ with .column_aa }}
+      {{ partial "bookshop" . }}
+    {{ end }}
+  </div>
+</div>

@@ -1,0 +1,110 @@
+{{ $src := .topper.image }}
+{{ $backgroundColor := "" }}
+{{ $headingSize := "display-3" }}
+{{ $placement := "mx-xl-auto text-center" }}
+{{ $buttonColor := "primary" }}
+
+{{ $audienceOverride := "" }}
+{{ $toneOverride := "" }}
+
+{{ if .topper.settings.styles.audience }}
+  {{ $audienceOverride = "override-audience-styles-site" }}
+{{ end }}
+
+{{ if .topper.settings.styles.tone }}
+  {{ $toneOverride = "override-tone-styles-site" }}
+{{ end }}
+
+{{ if .topper.settings.styles.color_palette }}
+  {{ $backgroundColor = .topper.settings.styles.color_palette }}
+{{ end }}
+
+{{ if and .topper.image (not .topper.settings.styles.enable_blend) }}
+  {{ $backgroundColor = "option-2" }}
+{{ end }}
+
+{{ with .topper.settings.styles.heading_size }}
+  {{ $headingSize = . }}
+{{ end }}
+
+{{- if not site.Params.env_bookshop_live -}}
+  {{ $image := "" }}
+  {{/*  Get the image, either from its remote or local source  */}}
+  {{ if hasPrefix $src "http"}}
+    {{ $image = resources.GetRemote .topper.image }}
+  {{ else }}
+    {{ $image = resources.Get .topper.image }}
+  {{ end }}
+
+  {{/* Resize images and add them to a variable  */}}
+  {{ if and $image (ne $image.MediaType.SubType "svg") }}
+    {{ if eq .imageProcess "fit" }}
+      {{ $src = ($image.Fit (printf "%dx%d webp" 1920 1080)).RelPermalink }}
+    {{ else }}
+      {{ $src = ($image.Fill (printf "%dx%d webp" 1920 1080)).RelPermalink }}
+    {{ end }}
+  {{ end }}
+{{- end -}}
+
+<header id="" class="c-topper-hero {{ $audienceOverride }} {{ $toneOverride }} audience-{{ .topper.settings.styles.audience }} tone-{{ .topper.settings.styles.tone}} bg-{{ $backgroundColor }} position-relative">
+  {{ partial "bookshop_partial" (slice "section_background_simple" (dict "image" "" "styles" .topper.settings.styles "layout" .topper.settings.layout)) }}
+  <div class="container wvu-z-index-content">
+    <div class="row py-7 gx-xl-5">
+      <div class="col-xl-12 me-auto d-flex align-items-center">
+        <div class="w-100">
+          {{ with .topper.label }}
+            <p class="h6 mb-6 wvu-b-label">{{ . }}</p>
+          {{ end }}
+          
+          {{ with .topper.heading }}
+            <h1 id="" class="wvu-b-display-heading wvu-b-text-shadow wvu-b-text-outline {{ $headingSize }}" data-text="{{ . }}">
+              <span class="wvu-b-font-adjust">{{ . }}</span>
+            </h1>
+          {{ end }}
+
+          <p class="fs-3 my-3 wvu-b-text wvu-b-subheading"><span class="xwvu-b-font-adjust">{{ .topper.subheading }}</span></p>
+
+          {{ with .topper.markdown }}
+            <div class="mt-5 wvu-b-text">
+              {{ . | markdownify }}
+            </div>
+          {{ end }}
+
+          {{ with .topper.ctas }}
+            <div class="mt-4">
+              {{ range . }}
+                {{ if .button_c }}
+                  {{ $buttonColor = .button_c }}
+                {{ end }}
+                <a class="btn wvu-b-btn btn-lg mb-1" href="{{ .url }}">{{ .text }} {{ with .icon }}<span class="fa-regular fa-{{ . }}"></span>{{ end }}</a>
+                {{ $buttonColor := "primary" }}
+              {{ end }}
+            </div>
+          {{ end }}
+
+          {{ if or .topper.postscript.markdown .topper.postscript.ctas }}
+            {{ with .topper.postscript }}
+              <div class="mt-4">
+                {{ .markdown | markdownify }}
+              </div>
+            {{ end }}
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-lg-none mt-n5">
+    <img src="{{ $src }}" alt=""/>
+  </div>
+  <div class="position-absolute container-fluid pe-0 h-100 w-100 d-none d-lg-block" style="top: 0;">
+    <div class="row h-100 w-100 mx-0 gx-5 px-0">
+      <div class="col-lg-12 ms-lg-auto pe-0">
+        <div class="wvu-z-index-content h-100 w-100 text-center">
+          <div class="wvu-bg-img">
+            <img class="object-fit-cover object-position-{{ .topper.settings.layout.background_position }} h-100 w-100 position-relative" src="{{ $src }}" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

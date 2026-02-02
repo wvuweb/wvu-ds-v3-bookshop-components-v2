@@ -1,0 +1,148 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - topper
+  label: "Topper - Hero Split"
+  description:
+  icon:
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  label:
+  image:
+  alt_text:
+  heading: Heading
+  subheading: Subheading.
+  markdown:
+  ctas:
+    - text:
+      button_c:
+      icon:
+      url:
+  postscript:
+    markdown:
+    ctas:
+  settings:
+    styles:
+      audience: general
+      tone: loud
+      color_palette: option-2
+      enable_blend: false
+      enable_pattern: false
+      tint_opacity: "0.0"
+      heading_size: display-2
+    layout:
+      buffer:
+      # text_placement: mx-auto text-center
+      # background_position:
+    config:
+      show_label: true
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  # Settings
+  alt_text:
+    hidden: '!background_image'
+    options:
+      required: true
+  audience:
+    type: choice
+    options:
+      allow_empty: false
+      values:
+        - name: General
+          class: general
+        - name: Academic / Traditional
+          class: alumni
+        - name: Modern + Formal
+          class: leaders_partners
+        - name: Prospective Students
+          class: prospective_students
+      value_key: class
+    label: Style
+  bg_subtle:
+    type: checkbox
+  buffer:
+    type: select
+    options:
+      allow_empty: true
+      values: _select_data.buffers
+      value_key: class
+    cascade: true
+  color_palette:
+    type: choice
+    options:
+      allow_empty: false
+      values: _select_data.color_palettes
+      value_key: class
+    cascade: true
+  heading_size:
+    type: select
+    options:
+      allow_empty: true
+      values:
+        - name: Large
+          class: display-2
+        - name: Medium
+          class: display-3
+        - name: Small
+          class: display-4
+  image:
+    type: image
+    options:
+      allowed_sources:
+        - ccdam
+      width: 1920
+      height: 1080
+    cascade: true
+  # margin:
+  #   type: select
+  #   options:
+  #     allow_empty: true
+  #     values: _select_data.container_margins
+  #     value_key: class
+  #   cascade: true
+  padding:
+    type: auto
+    hidden: true
+  settings:
+    type: object
+    options:
+      subtype: tabbed
+  tint_opacity:
+    type: select
+    hidden: true
+    options:
+      allow_empty: true
+      values: _select_data.tint_opacities
+      value_key: value
+    comment: >-
+      Use to improve text legibility when applying a background image. Disabled
+      when blend is enabled.
+    cascade: true
+  tone:
+    type: choice
+    options:
+      allow_empty: false
+      values:
+        - name: Default
+          class: default
+        - name: Reserved
+          class: reserved
+        - name: Loud
+          class: loud
+        - name: Let’s Go!
+          class: lets-go
+      value_key: class
+  enable_blend:
+    hidden: true
+  enable_pattern:
+    hidden: true
+  markdown:
+    options:
+      allowed_sources:
+        - ccdam

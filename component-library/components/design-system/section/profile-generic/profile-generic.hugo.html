@@ -1,0 +1,158 @@
+{{ $src := .image }}
+
+{{- if not site.Params.env_bookshop_live -}}
+  {{ $image := "" }}
+  {{/*  Get the image, either from its remote or local source  */}}
+  {{ if hasPrefix $src "http"}}
+    {{ $image = resources.GetRemote $src }}
+  {{ else }}
+    {{ $image = resources.Get $src }}
+  {{ end }}
+
+  {{/* Resize images and add them to a variable  */}}
+  {{ if and $image (ne $image.MediaType.SubType "svg") }}
+    {{ if .settings.layout.is_cutout }}
+      {{ $src = ($image.Fit (printf "%dx%d webp" 640 960)).RelPermalink }}
+    {{ else }}
+      {{ $src = ($image.Fit (printf "%dx%d webp" 960 640)).RelPermalink }}
+    {{ end }}
+  {{ end }}
+{{- end -}}
+
+{{ $videoSrc := .video_image }}
+
+{{- if not site.Params.env_bookshop_live -}}
+  {{ $videoImage := "" }}
+  {{/*  Get the image, either from its remote or local source  */}}
+  {{ if hasPrefix $videoSrc "http"}}
+    {{ $videoImage = resources.GetRemote $videoSrc }}
+  {{ else }}
+    {{ $videoImage = resources.Get $videoSrc }}
+  {{ end }}
+
+  {{/* Resize images and add them to a variable  */}}
+  {{ if and $videoImage (ne $videoImage.MediaType.SubType "svg") }}
+    {{ $videoSrc = ($videoImage.Fill (printf "%dx%d webp" 1920 1080)).RelPermalink }}
+  {{ end }}
+{{- end -}}
+
+<div class="bg-{{ .settings.styles.card_c }} wvu-b-border wvu-b-shadow {{ .settings.layout.margin_no_bg }}">
+  {{ if and .settings.styles .settings.styles.tone (eq .settings.styles.tone "lets-go") }}
+    <div class="wvu-bg-img">
+      <div class="wvu-b-gradient d-flex w-100 h-100 justify-content-between position-absolute d-flex w-100 h-100 justify-content-between"></div>
+    </div>
+  {{ end }}
+  <div class="row gx-0">
+    <div class="col-lg-12 ms-auto">
+      {{ if .label }}
+        <h2 id="{{ .settings.config.name }}-label" class="d-none d-lg-block wvu-b-accent-bg wvu-text-vertical wvu-shout h6 small wvu-text-letter-spacing-lg h-100 m-0 wvu-z-index-max"><span class="d-block bg- p-2">{{ .label }}</span></h2>
+      {{ else }}
+        <h2 id="{{ .settings.config.name }}-label" class="visually-hidden">Profile</h2>
+      {{ end }}
+      <div class="{{ if .settings.layout.is_cutout }}p-5{{ else }}pe-lg-5{{ end }} w-100 h-100 position-relative">
+        <div class="h-100 position-relative">
+          <div class="w-100 h-100">
+            <div class="row h-100">
+              {{ if .image }}
+                {{ if .settings.layout.is_cutout }}
+                  <div class="wvu-bg-img px-0 ms-lg-4">
+                    <div class="wvu-bg-topo-light wvu-b-pattern-color h-100 w-100 position-absolute" style="opacity: .5; width: calc(100% - 1.5rem) !important;"></div>
+                  </div>
+                  <div class="col-xxl-17 mx-xxl-auto d-flex justify-content-center align-items-end wvu-z-index-content">
+                    <div class="wvu-z-index-content">
+                      <div class="overflow-hidden mb-n5 mt-n6">
+                        <img class="object-fit wvu-b-shadow" src="{{ $src }}" alt="Portrait of {{ .name }}" />
+                      </div>
+                    </div>
+                  </div>
+                {{ else }}
+                  <img class="d-lg-none" src="{{ $src }}" alt="Portrait of {{ .name }}" />
+                  <div class="w-100 h-100 d-none d-lg-flex justify-content-center align-items-end wvu-z-index-content">
+                    <div class="wvu-z-index-content h-100">
+                      <img class="object-fit-cover h-100" src="{{ $src }}" alt="Portrait of {{ .name }}" />
+                    </div>
+                  </div>
+                {{ end }}
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 mx-auto">
+      <div class="row">
+        <div class="col-lg-16">
+          <div class="wvu-z-index-content position-relative px-5 px-lg-3 py-5 py-xl-6 my-xl-n3">
+            {{ with .super_heading }}
+              <div class="wvu-b-superheading wvu-b-label">
+                <p class="">
+                  {{ range . }}
+                    <span class="d-block">{{ . }}</span>
+                  {{ end }}
+                </p>
+              </div>
+            {{ end }}
+            <h3 class="display-5 wvu-header-max-width wvu-b-display-heading wvu-b-accent-text wvu-b-text-shadow mb-3" data-text="{{ .heading }}"><span class="wvu-b-font-adjust">{{ .heading }}</span></h3>
+            {{ with .name }}
+              <p class="wvu-b-subheading fs-2 mb-3">{{ . }}</p>
+            {{ end }}
+            {{ with .info }}
+              <div class="">
+                {{ range . }}
+                  <p class="mb-0">{{ . }}</p>
+                {{ end }}
+              </div>
+            {{ end }}
+            <div class="my-3 position-relative">
+              {{ if .add_quotemark }}
+                <span class="display-3 wvu-b-accent d-block d-lg-none mb-n3 wvu-b-display-heading">“</span>
+                <span class="display-3 wvu-b-accent d-none d-lg-block position-absolute ms-n5 mt-n2 wvu-b-display-heading" style="top:0;">“</span>
+              {{ end }}
+              {{ .copy | markdownify }}
+            </div>
+            {{ with .profile_url }}
+              <p><a href="{{ . }}" class="text-decoration-none wvu-b-accent-text"><span class="fa-solid fa-user-circle"></span> View Profile</a></p>
+            {{ end }}
+          </div>
+        </div>
+        <div class="col-lg-8 d-flex align-items-center position-relative">
+          <div class="py-lg-6 mx-5 mx-lg-0 mb-5 mt-lg-n3 mb-lg-n3 w-100 pe-lg-4">
+            <div class="row">            
+              {{ if .ctas }}
+                <div class="col-sm col-lg-24 mb-5">
+                  <div class="wvu-z-index-content me-lg-n4">
+                    <div>
+                      <h4 class="wvu-b-label small h6 wvu-text-letter-spacing-lg ps-2 pb-1 py-1 pe-2 wvu-b-accent-bg mb-0">See More</h4>
+                      <ul class="list-unstyled small wvu-b-subtle ps-2 py-2 pe-2 mb-0">
+                        {{ range .ctas }}
+                          <li class=""><a class="d-flex w-100 justify-content-between align-items-center py-1 text-decoration-none" href="{{ .url }}">{{ .text }}</a></li>
+                        {{ end }}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              {{ end }}
+              {{ if .video_id }}
+                <div class="col-sm col-md-24">
+                  <div class="ms-lg-n3 me-lg-n5 wvu-z-index-content">
+                    <div class="me-lg-n5">
+                      <div class="ratio ratio-16x9 bg-dark position-relative wvu-shadow-hard-filter">
+                        <div class="wvu-bg-image">
+                          <img class="position-absolute h-100 w-100 object-fit-cover" src="https://img.youtube.com/vi/{{ .video_id }}/hqdefault.jpg" alt="Video of {{ .name }}" />
+                          <div class="position-absolute wvu-bg-tint w-100 h-100" style="opacity: 0.7;"></div>
+                        </div>
+                        <div class="wvu-b-accent-text d-flex w-100 h-100 align-items-center justify-content-center">
+                          <a class="small d-block me-2 mt-n1 text-white text-decoration-none stretched-link" href="https://www.youtube.com/watch?v={{ .video_id }}">Watch Video</a> <span class="d-block fa-regular fa-circle-play h2 text-white"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

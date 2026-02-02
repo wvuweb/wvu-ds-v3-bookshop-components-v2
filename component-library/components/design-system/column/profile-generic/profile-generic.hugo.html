@@ -1,0 +1,113 @@
+{{ $src := .image }}
+
+{{- if not site.Params.env_bookshop_live -}}
+  {{ $image := "" }}
+  {{/*  Get the image, either from its remote or local source  */}}
+  {{ if hasPrefix $src "http"}}
+    {{ $image = resources.GetRemote $src }}
+  {{ else }}
+    {{ $image = resources.Get $src }}
+  {{ end }}
+
+  {{/* Resize images and add them to a variable  */}}
+  {{ if and $image (ne $image.MediaType.SubType "svg") }}
+    {{ $src = ($image.Fill (printf "%dx%d webp" 960 640)).RelPermalink }}
+  {{ end }}
+{{- end -}}
+
+<div class="wvu-b-subtle wvu-b-border wvu-b-shadow {{ .settings.layout.margin_no_bg }}">
+  <div class="row gx-0">
+    <div class="col-xxl-12 ms-auto position-relative">
+      {{ with .label }}
+        <h2 class="wvu-b-accent-text wvu-text-vertical wvu-b-label h6 small wvu-text-letter-spacing-lg h-100 m-0 wvu-z-index-max wvu-b-accent-bg" style="left: -1px;"><span class="d-block bg- p-2">{{ . }}</span></h2>
+      {{ end }}
+      <div class="pe-xxl-5 w-100 h-100 position-relative">
+        <div class="h-100 position-relative">
+          <div class="w-100 h-100">
+            <div class="row h-100">
+              {{ if .image }}
+                <img class="object-fit-cover h-100 d-xxl-none" src="{{ $src }}" alt="Portrait of {{ .name }}" />
+                <div class="d-none d-xxl-block w-100 h-100 d-flex justify-content-center align-items-end wvu-z-index-content">
+                  <div class="wvu-z-index-content h-100">
+                    <img class="object-fit-cover h-100" src="{{ $src }}" alt="Portrait of {{ .name }}" style="max-height: 300px;" />
+                  </div>
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xxl-12 mx-xxl-auto">
+      <div class="row">
+        <div class="col-md-16 col-xl-16">
+          <div class="wvu-z-index-content position-relative ps-3 ps-md-5 pe-5 ps-xxl-0 pe-xxl-3 py-5 my-xxl-n3">
+            <div>
+              {{ with .super_heading }}
+                <div class="wvu-b-superheading wvu-b-label">
+                  <p class="mb-1">
+                    {{ range . }}
+                      <span class="d-block">{{ . }}</span>
+                    {{ end }}
+                  </p>
+                </div>
+              {{ end }}
+              <h2 class="wvu-header-max-width wvu-b-display-heading wvu-b-accent-text wvu-b-text-shadow mb-2" data-text="{{ .heading }}"><span class="wvu-b-font-adjust">{{ .heading }}</span></h2>
+              {{ with .name }}
+                <p class="wvu-b-subheading fs-5 mb-2">{{ . }}</p>
+              {{ end }}
+              {{ with .info }}
+                <div class="small">
+                  {{ range . }}
+                    <p class="mb-0">{{ . }}</p>
+                  {{ end }}
+                </div>
+              {{ end }}
+              <div class="my-2 small">
+                {{ .copy | markdownify }}
+              </div>
+              {{ if .profile_url }}
+                <p><a href="{{ .profile_url }}" class="text-decoration-none wvu-b-accent-text small"><span class="fa-solid fa-user-circle"></span> View Profile</a></p>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 col-xl-7 d-flex align-items-center position-relative">
+          <div class="py-md-6 px-3 px-xxl-0 my-n3 w-100">
+            <div class="row">            
+              {{ if .ctas }}
+                <div class="col-sm col-md-24">
+                  <div class="wvu-z-index-content">
+                    <h2 class="wvu-b-label small h6 wvu-text-letter-spacing-lg">See More</h2>
+                    <ul class="list-unstyled w-100 small mb-5">
+                      {{ range .ctas }}
+                        <li class=""><a class="d-flex w-100 justify-content-between align-items-center py-1 text-decoration-none" href="{{ .url }}">{{ .text }}</a></li>
+                      {{ end }}
+                    </ul>
+                  </div>
+                </div>
+              {{ end }}
+              {{ if .video_id }}
+                <div class="col-sm col-md-24">
+                  <div class="ms-n3 me-n4 wvu-z-index-content">
+                    <div class="me-n5 position-relative">
+                      <div class="ratio ratio-16x9 bg-dark position-relative wvu-shadow-hard-filter">
+                        <div class="wvu-bg-image">
+                          <img class="position-absolute h-100 w-100 object-fit-cover" src="https://img.youtube.com/vi/{{ .video_id }}/hqdefault.jpg" alt="Video of {{ .name }}" />
+                          <div class="position-absolute wvu-bg-tint w-100 h-100" style="opacity: 0.7;"></div>
+                        </div>
+                        <div class="wvu-b-accent-text d-flex w-100 h-100 align-items-center justify-content-center">
+                          <a class="small d-block me-2 mt-n1 text-white text-decoration-none stretched-link" href="https://www.youtube.com/watch?v={{ .video_id }}">Watch Video</a> <span class="d-block fa-regular fa-circle-play h2 text-white"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

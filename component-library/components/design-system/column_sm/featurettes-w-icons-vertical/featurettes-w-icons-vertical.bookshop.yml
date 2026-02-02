@@ -1,0 +1,88 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - column_blocks_sm
+  label: "Featurettes w/Icons - Vertical"
+  description: Stacked features with icons, titles, and text.
+  icon: format_list_bulleted
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  heading: Heading
+  # subheading: Subheading.
+  items:
+    - title: Item 1 Title
+      icon:
+      # label:
+      # badge:
+      text: Item 1 text.
+      ctas:
+  settings:
+    styles:
+      audience: general
+    layout:
+    config:
+  is_dynamic: false
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  audience:
+    type: choice
+    options:
+      allow_empty: false
+      values:
+        - name: General
+          class: general
+        - name: Academic / Traditional
+          class: alumni
+        - name: Modern + Formal
+          class: leaders_partners
+        - name: Prospective Students
+          class: prospective_students
+      value_key: class
+    label: Style
+  badge:
+    hidden: true
+  config:
+    hidden: true
+  ctas:
+    type: array
+    options:
+      structures: _structures.links
+  is_dynamic:
+    hidden: true
+  layout:
+    hidden: true
+  label:
+    hidden: true
+  settings:
+    type: object
+    options:
+      subtype: tabbed
+  subheading:
+    hidden: true
+  text:
+    type: markdown
+    options:
+      blockquote: true
+      bulletedlist: true
+      bold: true
+      format: p h3 h4 h5 h6
+      image: false
+      italic: true
+      link: true
+      redo: true
+      removeformat: true
+      undo: true
+_structures:
+  links:
+    style: select
+    values:
+      - value:
+          text:
+          icon:
+          url:

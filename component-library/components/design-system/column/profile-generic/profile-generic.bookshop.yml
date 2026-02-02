@@ -1,0 +1,67 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - column_blocks
+  label: "Profile - Generic"
+  description: Spotlight with image, name, location, and heading.
+  icon: account_circle
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  component_name: profile-generic
+  label: Spotlight
+  heading: Heading
+  name: Firstname Lastname
+  image:
+  # is_cutout: false
+  super_heading:
+  info:
+  copy:
+  add_quotemark: false
+  profile_url:
+  ctas:
+  video_id:
+  is_dynamic: false
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  copy:
+    type: markdown
+    options:
+      allowed_sources:
+        - ccdam
+  ctas:
+    type: array
+    options:
+      structures: _structures.links
+  image:
+    type: image
+    options:
+      required: true
+      allowed_sources:
+        - ccdam
+      width: 1920
+      height: 1080
+  info:
+    type: array
+  info[*]:
+    type: text
+  is_cutout:
+    hidden: true
+  is_dynamic:
+    hidden: true
+  super_heading:
+    type: array
+  super_heading[*]:
+    type: text
+_structures:
+  links:
+    style: select
+    values:
+      - value:
+          text:
+          url:

@@ -1,0 +1,63 @@
+{{ $src := .image }}
+{{ $publishDate := .publish_date }}
+{{ $format := "January 2, 2006" }}
+
+{{ if and (not site.Params.env_bookshop_live) .publish_date }}
+  {{ $publishDate = .publish_date }}
+  {{ $publishDate = time.AsTime $publishDate }}
+  {{ $publishDate = $publishDate.Format $format }}
+{{ end }}
+
+{{- if not site.Params.env_bookshop_live -}}
+  {{ $image := "" }}
+  {{/*  Get the image, either from its remote or local source  */}}
+  {{ if hasPrefix $src "http"}}
+    {{ $image = resources.GetRemote $src }}
+  {{ else }}
+    {{ $image = resources.Get $src }}
+  {{ end }}
+
+  {{/* Resize images and add them to a variable  */}}
+  {{ if and $image (ne $image.MediaType.SubType "svg") }}
+    {{ if eq .imageProcess "fit" }}
+      {{ $src = ($image.Fit (printf "%dx%d webp" 1920 1080)).RelPermalink }}
+    {{ else }}
+      {{ $src = ($image.Fill (printf "%dx%d webp" 1920 1080)).RelPermalink }}
+    {{ end }}
+  {{ end }}
+{{- end -}}
+
+<header id="" class="position-relative bg-dark text-white mb-6">
+  {{ partial "bookshop_partial" (slice "section_background_simple" (dict "image" $src "styles" .topper.settings.styles "layout" .topper.settings.layout)) }}
+  <div class="container wvu-z-index-content py-10">
+    <div class="row">
+      <div class="col-xl-12 {{ .topper.settings.layout.text_placement }}">
+        {{ with .topper.label }}
+          <p class="h6 mb-6 wvu-b-label">{{ . }}</p>
+        {{ end }}
+
+        <h1 id="big-search-1-label" class="display-5 antonia-light mb-3">{{ .title }}</h1>
+
+        {{ if .subheading }}
+          <p class="config-light fs-4 mb-0">{{ .subheading }}</p>
+        {{ end }}
+
+        {{ if not site.Params.env_bookshop_live }}
+          <p class="mt-4 mb-0 antonia-light text-uppercase wvu-text-letter-spacing-lg">{{ $publishDate }}</p>
+        {{ end }}
+
+        <div class="d-flex mt-4 justify-content-center">
+          {{ if not site.Data }}
+            {{ partial "bookshop" (slice "design-system/generic/collection-tooltip" (dict "text" "Byline will not display content in the live editor." ) ) }}
+          {{ else if not site.Params.env_bookshop_live }}
+            {{ if and .authors .topper.show_byline }}
+              {{ partial "bookshop" (slice "design-system/simple/byline-test" (dict "authors" .authors )) }}
+            {{ end }}
+          {{ else }}
+            {{ partial "bookshop" (slice "design-system/generic/collection-tooltip-dynamic-component" .) }}
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

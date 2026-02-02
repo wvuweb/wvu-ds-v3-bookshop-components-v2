@@ -1,0 +1,9 @@
+{{ if and .topper .topper._bookshop_name }}
+  {{ partial "bookshop" (slice .topper._bookshop_name (dict "image" .image "title" .title "subheading" .subheading "publish_date" .publish_date "authors" .authors "topper" .topper)) }}
+{{ end }}
+
+<main class="antonia-regular">
+  {{ range .article_blocks }}
+    {{ partial "bookshop" . }}
+  {{ end }}
+</main>

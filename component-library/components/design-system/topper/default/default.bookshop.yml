@@ -1,0 +1,21 @@
+# Metadata about this component, to be used in the CMS
+spec:
+  structures:
+    - topper
+  label: "Topper - Default"
+  description:
+  icon:
+  tags: []
+
+# Defines the structure of this component, as well as the default values
+blueprint:
+  heading:
+  subheading:
+
+# Overrides any fields in the blueprint when viewing this component in the component browser
+preview:
+
+# Any extra CloudCannon inputs configuration to apply to the blueprint
+_inputs:
+  heading:
+    comment: This will overwrite your page title in the topper.

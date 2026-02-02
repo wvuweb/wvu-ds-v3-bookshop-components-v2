@@ -1,0 +1,25 @@
+<div class="mt-4">
+
+  {{ if .heading }}
+    <h2 class="">{{ .heading }}</h2>
+  {{ end }}
+
+  <div class="wvu-b-subtle p-4 p-xl-5 mt-5 rounded-5">
+    <ol>
+      {{ range .items }}
+        <li><a href="#{{ .question | urlize }}">{{ .question }}</a></li>
+      {{ end }}
+    </ol>
+  </div>
+
+  <ol class="fs-2 mt-5">
+    {{ range .items }}
+      <li class="mb-4">
+        <p class="mb-2" id="{{ .question | urlize }}">{{ .question }}</p>
+        <div class="fs-6 fw-normal">
+          {{ .answer | markdownify }}
+        </div>
+      </li>
+    {{ end }}
+  </ol>
+</div>
